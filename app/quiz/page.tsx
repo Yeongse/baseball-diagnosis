@@ -43,104 +43,93 @@ export default function QuizPage() {
           setDirection("in");
           setAnimating(false);
         }
-      }, 300);
-    }, 400);
+      }, 280);
+    }, 350);
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-5 py-12">
+    <main className="min-h-dvh flex flex-col px-5 pt-12 pb-8">
 
-      {/* Header: question count + progress */}
-      <div className="w-full max-w-lg mb-10">
-        <div className="flex items-baseline justify-between mb-3">
-          <div className="flex items-baseline gap-2">
-            <span className="font-accent text-2xl text-ink">Q.{current + 1}</span>
-            <span className="text-ink-muted text-xs">/ {questions.length}</span>
-          </div>
-          <span className="text-ink-muted text-xs">
-            {Math.round(progress)}%
-          </span>
+      {/* Progress header */}
+      <div className="w-full max-w-lg mx-auto mb-8">
+        <div className="flex items-baseline justify-between mb-2.5">
+          <span className="font-accent text-xl text-ink">Q.{current + 1}</span>
+          <span className="text-ink-muted text-[11px]">{current + 1} / {questions.length}</span>
         </div>
-        <div className="h-[2px] bg-border rounded-full overflow-hidden">
-          <div
-            className="progress-bar h-full rounded-full"
-            style={{ width: `${progress}%` }}
-          />
+        <div className="h-[3px] bg-paper-warm rounded-full overflow-hidden">
+          <div className="progress-bar h-full rounded-full" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
-      {/* Question card */}
-      <div
-        className={`w-full max-w-lg transition-all duration-300 ${
-          direction === "out"
-            ? "opacity-0 translate-x-3"
-            : "opacity-100 translate-x-0"
-        }`}
-      >
-        {/* Question text */}
-        <div className="mb-8">
-          <p className="text-ink-muted text-xs mb-2">
-            {question.sub || "最もあてはまるものを選んでください"}
-          </p>
-          <h2 className="font-display text-xl md:text-2xl text-ink leading-relaxed">
-            {question.text}
-          </h2>
-        </div>
+      {/* Question area — grows to fill */}
+      <div className="flex-1 flex flex-col justify-center w-full max-w-lg mx-auto">
+        <div
+          className={`transition-all duration-280 ${
+            direction === "out" ? "opacity-0 translate-x-2" : "opacity-100 translate-x-0"
+          }`}
+          style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
+        >
+          {/* Question */}
+          <div className="mb-7">
+            <p className="text-ink-muted text-[12px] mb-1.5">
+              {question.sub || "最もあてはまるものを選んでください"}
+            </p>
+            <h2 className="font-display text-[1.3rem] text-ink leading-snug">
+              {question.text}
+            </h2>
+          </div>
 
-        {/* Options */}
-        <div className="space-y-3">
-          {question.options.map((opt, i) => (
-            <button
-              key={i}
-              onClick={() => handleSelect(i)}
-              disabled={selected !== null}
-              className={`option-card w-full text-left px-5 py-4 rounded-sm flex items-center gap-4
-                ${selected === i
-                  ? "!border-vermillion !bg-vermillion/[0.06] ring-1 ring-vermillion/20"
-                  : selected !== null
-                    ? "opacity-35 cursor-not-allowed"
-                    : "cursor-pointer"
-                }
-              `}
-            >
-              <span
-                className={`w-7 h-7 rounded-sm flex items-center justify-center text-xs font-bold shrink-0 transition-all duration-200
+          {/* Options */}
+          <div className="space-y-2.5">
+            {question.options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => handleSelect(i)}
+                disabled={selected !== null}
+                className={`option-card w-full text-left px-4 py-[14px] rounded-md flex items-center gap-3.5
                   ${selected === i
-                    ? "bg-vermillion text-white"
-                    : "border border-border text-ink-muted"
+                    ? "!border-vermillion !bg-[#fdf2f1]"
+                    : selected !== null
+                      ? "opacity-30 !cursor-default"
+                      : "cursor-pointer"
                   }
                 `}
               >
-                {String.fromCharCode(65 + i)}
-              </span>
-              <span
-                className={`text-sm leading-relaxed ${
-                  selected === i ? "text-ink font-medium" : "text-ink-soft"
-                }`}
-              >
-                {opt.text}
-              </span>
-              {selected === i && (
-                <svg className="ml-auto shrink-0 text-vermillion" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              )}
-            </button>
-          ))}
+                <span
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-colors duration-150
+                    ${selected === i
+                      ? "bg-vermillion text-white"
+                      : "border-[1.5px] border-border text-ink-muted"
+                    }
+                  `}
+                >
+                  {String.fromCharCode(65 + i)}
+                </span>
+                <span className={`text-[15px] leading-snug ${selected === i ? "text-ink font-medium" : "text-ink-soft"}`}>
+                  {opt.text}
+                </span>
+                {selected === i && (
+                  <svg className="ml-auto shrink-0 text-vermillion" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Diamond dot progress */}
-      <div className="flex items-center gap-2 mt-12">
+      {/* Dot progress at bottom */}
+      <div className="flex items-center justify-center gap-[6px] pt-6">
         {questions.map((_, i) => (
           <div
             key={i}
-            className={`transition-all duration-300 ${
+            className={`rounded-full transition-all duration-300 ${
               i < current
-                ? "w-2 h-2 bg-vermillion rotate-45"
+                ? "w-[7px] h-[7px] bg-vermillion"
                 : i === current
-                  ? "w-3 h-3 bg-vermillion rotate-45"
-                  : "w-1.5 h-1.5 bg-border rotate-45"
+                  ? "w-[9px] h-[9px] bg-vermillion"
+                  : "w-[5px] h-[5px] bg-border"
             }`}
           />
         ))}

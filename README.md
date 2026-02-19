@@ -73,15 +73,25 @@ const ADSTERRA_ZONE_ID = "a1b2c3d4e5f6";  // ← あなたのZone ID
 
 ## 🌐 Cloudflare Pages デプロイ手順
 
-### 前提：GitHubにプッシュ
+### 1. GitHub でリポジトリを作成
+
+1. https://github.com/new を開く
+2. **Repository name**: `baseball-diagnosis`（任意でOK）
+3. **Public** を選択
+4. **Add a README file** はチェックしない（既にローカルにあるため）
+5. **Create repository** をクリック
+
+### 2. リモートを追加してプッシュ
+
+このプロジェクトではすでに `git init` と初回コミット済みです。以下で GitHub と紐づけます。
 
 ```bash
-git init
-git add .
-git commit -m "initial commit"
+cd /path/to/baseball-diagnosis   # プロジェクト直下で
 git remote add origin https://github.com/あなたのユーザー名/baseball-diagnosis.git
 git push -u origin main
 ```
+
+※ **あなたのユーザー名** と **baseball-diagnosis** は、上で作成したリポジトリのURLに合わせて書き換えてください。SSH を使う場合は `git@github.com:ユーザー名/baseball-diagnosis.git` でも可。
 
 ### Cloudflare Pages に接続
 

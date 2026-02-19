@@ -6,88 +6,79 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
   background-color: #F5EFE6;
   color: #1A1714;
   font-family: 'Noto Sans JP', sans-serif;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Paper texture with subtle grain */
+/* Paper texture — subtle grain */
 .bg-paper-texture {
   background-color: #F5EFE6;
   background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-}
-
-/* Diamond motif — the signature shape */
-.diamond-sm {
-  width: 12px;
-  height: 12px;
-  transform: rotate(45deg);
-  background: #C93A2D;
-}
-
-.diamond-outline {
-  transform: rotate(45deg);
-  border: 1.5px solid rgba(201, 58, 45, 0.12);
-}
-
-/* Red accent rule */
-.rule-vermillion {
-  width: 48px;
-  height: 2px;
-  background: #C93A2D;
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
 }
 
 /* Progress bar */
 .progress-bar {
   background: #C93A2D;
-  transition: width 0.5s ease;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Quiz option */
 .option-card {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid #D1C7B8;
-  transition: all 0.2s ease;
+  background: #fff;
+  border: 1.5px solid #D1C7B8;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
 }
 
 .option-card:hover:not(:disabled) {
   border-color: #C93A2D;
-  background: rgba(201, 58, 45, 0.04);
+  background: #fdf6f5;
 }
 
 .option-card:active:not(:disabled) {
-  transform: scale(0.99);
+  transform: scale(0.985);
 }
 
-/* Result card */
-.result-card {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid #D1C7B8;
-  box-shadow: 0 1px 3px rgba(26, 23, 20, 0.04);
-}
-
-/* Share button */
+/* Share button base */
 .share-btn {
-  transition: all 0.15s ease;
-}
-.share-btn:hover {
-  transform: translateY(-1px);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 .share-btn:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
-/* Stagger animation utility */
-.stagger-1 { animation-delay: 0.08s; }
-.stagger-2 { animation-delay: 0.16s; }
-.stagger-3 { animation-delay: 0.24s; }
-.stagger-4 { animation-delay: 0.32s; }
-.stagger-5 { animation-delay: 0.4s; }
-.stagger-6 { animation-delay: 0.48s; }
-.stagger-7 { animation-delay: 0.56s; }
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease both;
+}
+.fade-in-d1 { animation: fadeIn 0.5s 0.07s ease both; }
+.fade-in-d2 { animation: fadeIn 0.5s 0.14s ease both; }
+.fade-in-d3 { animation: fadeIn 0.5s 0.22s ease both; }
+.fade-in-d4 { animation: fadeIn 0.5s 0.30s ease both; }
+.fade-in-d5 { animation: fadeIn 0.5s 0.38s ease both; }
+
+/* Diamond pulse — highlighted position node */
+@keyframes diamondPulse {
+  0%   { r: 18; opacity: 0.5; }
+  100% { r: 26; opacity: 0; }
+}
+.diamond-pulse {
+  animation: diamondPulse 1.8s ease-out infinite;
+}

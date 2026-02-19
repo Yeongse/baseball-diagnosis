@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
-const ADSTERRA_ZONE_ID = "YOUR_ADSTERRA_ZONE_ID_HERE";
+const ADSTERRA_ZONE_ID = process.env.NEXT_PUBLIC_ADSTERRA_INTERSTITIAL_ZONE_ID ?? "";
 const COUNTDOWN_SEC = 5;
 
 function AdContent() {
@@ -27,26 +27,26 @@ function AdContent() {
     router.push(`/result?id=${resultId}`);
   };
 
-  const circumference = 2 * Math.PI * 24;
+  const circumference = 2 * Math.PI * 22;
 
   return (
-    <main className="fixed inset-0 z-50 bg-paper/95 backdrop-blur-sm flex flex-col items-center justify-center px-5">
+    <main className="fixed inset-0 z-50 bg-paper flex flex-col items-center justify-center px-6">
 
-      {/* Close / countdown */}
-      <div className="absolute top-6 right-6">
+      {/* Close / countdown — top right */}
+      <div className="absolute top-5 right-5">
         {canClose ? (
           <button
             onClick={handleClose}
-            className="flex items-center gap-2 bg-vermillion hover:bg-vermillion-dark text-white px-5 py-2.5 rounded-sm transition-all text-sm font-bold hover:-translate-y-0.5 active:translate-y-0"
+            className="bg-vermillion active:bg-vermillion-dark text-white text-[14px] font-bold px-5 py-2.5 rounded-md transition-colors"
           >
             結果を見る →
           </button>
         ) : (
-          <div className="relative w-14 h-14 flex items-center justify-center">
-            <svg className="absolute inset-0 -rotate-90" width="56" height="56">
-              <circle cx="28" cy="28" r="24" fill="none" stroke="#D1C7B8" strokeWidth="2" />
+          <div className="relative w-12 h-12 flex items-center justify-center">
+            <svg className="absolute inset-0 -rotate-90" width="48" height="48">
+              <circle cx="24" cy="24" r="22" fill="none" stroke="#D1C7B8" strokeWidth="2" />
               <circle
-                cx="28" cy="28" r="24"
+                cx="24" cy="24" r="22"
                 fill="none"
                 stroke="#C93A2D"
                 strokeWidth="2"
@@ -56,25 +56,24 @@ function AdContent() {
                 style={{ transition: "stroke-dashoffset 1s linear" }}
               />
             </svg>
-            <span className="font-accent text-2xl text-ink">{seconds}</span>
+            <span className="font-accent text-xl text-ink">{seconds}</span>
           </div>
         )}
       </div>
 
       {/* Message */}
-      <div className="text-center mb-10">
-        <div className="diamond-sm mx-auto mb-6" />
-        <h2 className="font-display text-2xl text-ink mb-2">結果を準備中…</h2>
-        <p className="text-ink-muted text-sm">広告をご覧いただいた後、結果をお届けします</p>
+      <div className="text-center mb-8">
+        <p className="font-display text-xl text-ink mb-2">結果を準備中…</p>
+        <p className="text-ink-muted text-[13px]">広告表示後に結果をお届けします</p>
       </div>
 
       {/* Ad container */}
       <div
         id="adsterra-container"
-        className="w-full max-w-sm bg-white/50 border border-border rounded-sm overflow-hidden"
+        className="w-full max-w-sm bg-white border border-border rounded-md overflow-hidden"
         style={{ minHeight: "250px" }}
       >
-        {ADSTERRA_ZONE_ID !== "YOUR_ADSTERRA_ZONE_ID_HERE" ? (
+        {ADSTERRA_ZONE_ID.length > 0 ? (
           <>
             <Script
               id="adsterra-ad"
@@ -97,15 +96,15 @@ function AdContent() {
             />
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-ink-muted text-sm text-center p-6">
-            <p className="mb-1">AdsterraのゾーンIDを</p>
-            <p><code className="text-vermillion/70 text-xs">app/ad/page.tsx</code> に設定してください</p>
+          <div className="flex flex-col items-center justify-center h-64 text-ink-muted text-[13px] text-center p-6">
+            <p className="mb-1">広告枠（interstitial）</p>
+            <p><code className="text-vermillion/60 text-[10px]">.env → NEXT_PUBLIC_ADSTERRA_INTERSTITIAL_ZONE_ID</code></p>
           </div>
         )}
       </div>
 
       {/* Skip text */}
-      <p className="mt-6 text-ink-muted/50 text-xs">
+      <p className="mt-5 text-ink-muted/40 text-[11px]">
         {canClose ? "" : `${seconds}秒後にスキップできます`}
       </p>
     </main>
@@ -114,11 +113,13 @@ function AdContent() {
 
 export default function AdPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <span className="text-ink-muted text-sm">読み込み中...</span>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-dvh flex items-center justify-center">
+          <span className="text-ink-muted text-sm">読み込み中...</span>
+        </div>
+      }
+    >
       <AdContent />
     </Suspense>
   );

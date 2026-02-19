@@ -41,8 +41,10 @@ baseball-diagnosis/
 │   │   └── page.tsx      ← 10問の診断ページ
 │   ├── ad/
 │   │   └── page.tsx      ← Adsterra インタースティシャル（5秒カウントダウン）
-│   └── result/
-│       └── page.tsx      ← 診断結果ページ（シェアボタン付き）
+│   ├── result/
+│   │   └── page.tsx      ← 診断結果ページ（シェアボタン付き）
+│   └── results/
+│       └── page.tsx      ← 全結果一覧ページ（ポジション別グループ表示）
 ├── lib/
 │   ├── questions.ts      ← 10問 × 4択（5軸スコアリング）
 │   ├── results.ts        ← 50種類の結果データ
@@ -97,16 +99,38 @@ baseball-diagnosis/
 
 ## 広告設定（最重要）
 
-`app/ad/page.tsx` の先頭にある定数を書き換えるだけで広告が有効になる：
+### 1. インタースティシャル広告（クイズ → 結果の間）
+
+`app/ad/page.tsx` の先頭にある定数を書き換える：
 
 ```typescript
-// ここにAdsterraで発行したZone IDを設定する
 const ADSTERRA_ZONE_ID = "YOUR_ADSTERRA_ZONE_ID_HERE";
 ```
 
+### 2. バナー広告（結果詳細・結果一覧）
+
+`components/AdBanner.tsx` の `ZONE_IDS` を書き換える：
+
+```typescript
+const ZONE_IDS = {
+  RECTANGLE: "YOUR_RECTANGLE_ZONE_ID_HERE",  // 300×250 — 結果詳細ページ
+  NATIVE: "YOUR_NATIVE_ZONE_ID_HERE",        // Native Banner — 結果一覧ページ
+};
+```
+
+### 広告配置マップ
+
+| ページ | 広告タイプ | 配置 |
+|--------|-----------|------|
+| トップ (`/`) | なし | CV率を守るため非掲載 |
+| クイズ (`/quiz`) | なし | 集中を妨げないため非掲載 |
+| 広告 (`/ad`) | インタースティシャル | 5秒カウントダウン後にスキップ可 |
+| 結果詳細 (`/result`) | 300×250 レクタングル | シェアボタンの下（スクショ汚染回避） |
+| 結果一覧 (`/results`) | Native Banner ×2 | 投手グループ後・外野手グループ後 |
+
 **Adsterra でのZone ID 取得手順：**
 1. https://adsterra.com → Publishers → My Sites → サイトURLを追加
-2. Ad Units → Create Ad Unit → **Interstitial** を選択
+2. Ad Units → Create Ad Unit → 形式を選択（Interstitial / Display Banner / Native Banner）
 3. 発行された Zone ID をコピーして上記に貼り付け
 
 Zone ID が未設定のままだとプレースホルダー表示になる（開発時は問題なし）。
@@ -115,11 +139,12 @@ Zone ID が未設定のままだとプレースホルダー表示になる（開
 
 ## デザイン方針
 
-- **テーマ：** 夜のスタジアム・ダークネイビー基調
-- **フォント：** Bebas Neue（スコアボード風タイトル）+ Noto Sans JP（本文）
-- **アクセントカラー：** ゴールド（`#f5a623`）
-- **アニメーション：** `animate-fade-up`（CSS keyframes定義済み）
-- generic な AI っぽいデザイン（紫グラデ・Inter フォントなど）は使わない
+- **テーマ：** 和エディトリアル — 暖かみのある紙の質感、朱色アクセント、明朝体見出し
+- **カラー：** ペーパークリーム `#F5EFE6` 基調 / 朱色 `#C93A2D` / 墨色 `#1A1714`
+- **フォント：** Shippori Mincho B1（見出し）+ Noto Sans JP（本文）+ DM Serif Display（英数字）
+- **結果ページ：** ポジション別のグラデーションヒーロー + 診断結果画像（`/images/results/{id}.webp`）中心のMBTI風リッチレイアウト
+- **モバイルファースト：** `min-h-dvh` / タッチターゲット 44px以上 / full-width CTA
+- **AI臭さ排除：** glow/blur/glassmorphism 不使用、対称的すぎるレイアウト回避、控えめなアニメーション
 
 ---
 
