@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "野球選手タイプ診断 | あなたは何番ポジション？",
+  title: "野球選手タイプ診断 | Scout Report",
   description:
-    "10問の質問に答えるだけ！あなたの性格・行動パターンから、野球選手に例えるとどのポジション・打順・タイプかを診断します。結果は50種類以上！友達にもシェアしよう。",
-  keywords: "野球, 診断, 性格診断, ポジション, 打順, 野球選手タイプ",
+    "10問の質問に答えるだけ！あなたの性格・行動パターンから、野球選手に例えるとどのポジション・打順・タイプかを診断します。結果は55種類以上！友達にもシェアしよう。",
+  keywords: "野球, 診断, 性格診断, ポジション, 打順, 野球選手タイプ, スカウトレポート",
+  icons: {
+    icon: "/app_icon.png",
+    apple: "/app_icon.png",
+  },
   openGraph: {
-    title: "野球選手タイプ診断",
+    title: "野球選手タイプ診断 — Scout Report",
     description: "あなたは先発エース？4番スラッガー？クローザー？10問で判明！",
     type: "website",
   },

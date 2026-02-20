@@ -53,7 +53,7 @@ export default function QuizPage() {
       {/* Progress header */}
       <div className="w-full max-w-lg mx-auto mb-8">
         <div className="flex items-baseline justify-between mb-2.5">
-          <span className="font-accent text-xl text-ink">Q.{current + 1}</span>
+          <span className="font-accent text-xl text-navy">Q.{current + 1}</span>
           <span className="text-ink-muted text-[11px]">{current + 1} / {questions.length}</span>
         </div>
         <div className="h-[3px] bg-paper-warm rounded-full overflow-hidden">
@@ -88,7 +88,7 @@ export default function QuizPage() {
                 disabled={selected !== null}
                 className={`option-card w-full text-left px-4 py-[14px] rounded-md flex items-center gap-3.5
                   ${selected === i
-                    ? "!border-vermillion !bg-[#fdf2f1]"
+                    ? "!border-navy !bg-[#f0f3f7]"
                     : selected !== null
                       ? "opacity-30 !cursor-default"
                       : "cursor-pointer"
@@ -98,7 +98,7 @@ export default function QuizPage() {
                 <span
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-colors duration-150
                     ${selected === i
-                      ? "bg-vermillion text-white"
+                      ? "bg-navy text-white"
                       : "border-[1.5px] border-border text-ink-muted"
                     }
                   `}
@@ -109,7 +109,7 @@ export default function QuizPage() {
                   {opt.text}
                 </span>
                 {selected === i && (
-                  <svg className="ml-auto shrink-0 text-vermillion" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="ml-auto shrink-0 text-navy" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
@@ -126,9 +126,9 @@ export default function QuizPage() {
             key={i}
             className={`rounded-full transition-all duration-300 ${
               i < current
-                ? "w-[7px] h-[7px] bg-vermillion"
+                ? "w-[7px] h-[7px] bg-gold"
                 : i === current
-                  ? "w-[9px] h-[9px] bg-vermillion"
+                  ? "w-[9px] h-[9px] bg-navy"
                   : "w-[5px] h-[5px] bg-border"
             }`}
           />

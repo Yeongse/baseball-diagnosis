@@ -37,18 +37,18 @@ function AdContent() {
         {canClose ? (
           <button
             onClick={handleClose}
-            className="bg-vermillion active:bg-vermillion-dark text-white text-[14px] font-bold px-5 py-2.5 rounded-md transition-colors"
+            className="bg-navy active:bg-navy-dark text-white text-[14px] font-bold px-5 py-2.5 rounded-md transition-colors"
           >
-            結果を見る →
+            レポートを見る →
           </button>
         ) : (
           <div className="relative w-12 h-12 flex items-center justify-center">
             <svg className="absolute inset-0 -rotate-90" width="48" height="48">
-              <circle cx="24" cy="24" r="22" fill="none" stroke="#D1C7B8" strokeWidth="2" />
+              <circle cx="24" cy="24" r="22" fill="none" stroke="#D6CCBC" strokeWidth="2" />
               <circle
                 cx="24" cy="24" r="22"
                 fill="none"
-                stroke="#C93A2D"
+                stroke="#C5973E"
                 strokeWidth="2"
                 strokeDasharray={`${circumference}`}
                 strokeDashoffset={`${circumference - (seconds / COUNTDOWN_SEC) * circumference}`}
@@ -63,8 +63,11 @@ function AdContent() {
 
       {/* Message */}
       <div className="text-center mb-8">
-        <p className="font-display text-xl text-ink mb-2">結果を準備中…</p>
-        <p className="text-ink-muted text-[13px]">広告表示後に結果をお届けします</p>
+        <p className="text-gold text-[10px] tracking-[0.2em] uppercase font-bold mb-3">
+          Scout Report
+        </p>
+        <p className="font-display text-xl text-ink mb-2">レポートを作成中…</p>
+        <p className="text-ink-muted text-[13px]">広告表示後にレポートをお届けします</p>
       </div>
 
       {/* Ad container */}
@@ -98,7 +101,7 @@ function AdContent() {
         ) : (
           <div className="flex flex-col items-center justify-center h-64 text-ink-muted text-[13px] text-center p-6">
             <p className="mb-1">広告枠（interstitial）</p>
-            <p><code className="text-vermillion/60 text-[10px]">.env → NEXT_PUBLIC_ADSTERRA_INTERSTITIAL_ZONE_ID</code></p>
+            <p><code className="text-navy/40 text-[10px]">.env → NEXT_PUBLIC_ADSTERRA_INTERSTITIAL_ZONE_ID</code></p>
           </div>
         )}
       </div>

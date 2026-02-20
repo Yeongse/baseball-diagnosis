@@ -1,28 +1,75 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { results, type Result } from "@/lib/results";
 import AdBanner from "@/components/AdBanner";
 
 /* ── Position group definitions ── */
-const GROUPS: { label: string; positions: string[]; color: string }[] = [
-  { label: "投手",   positions: ["SP", "RP", "CP"], color: "#1c4f80" },
-  { label: "捕手",   positions: ["C"],              color: "#16524a" },
-  { label: "内野手", positions: ["1B", "2B", "3B", "SS"], color: "#6e4a14" },
-  { label: "外野手", positions: ["LF", "CF", "RF"], color: "#385a16" },
-  { label: "指名打者", positions: ["DH"],           color: "#4e1870" },
-  { label: "ユーティリティ", positions: ["UTIL"],   color: "#2e2e48" },
+const GROUPS: { label: string; labelEn: string; positions: string[] }[] = [
+  { label: "投手",   labelEn: "PITCHERS",  positions: ["SP", "RP", "CP"] },
+  { label: "捕手",   labelEn: "CATCHER",   positions: ["C"] },
+  { label: "内野手", labelEn: "INFIELDERS", positions: ["1B", "2B", "3B", "SS"] },
+  { label: "外野手", labelEn: "OUTFIELDERS", positions: ["LF", "CF", "RF"] },
+  { label: "指名打者", labelEn: "DH",       positions: ["DH"] },
+  { label: "ユーティリティ", labelEn: "UTILITY", positions: ["UTIL"] },
 ];
 
 /** Show native ad after these group indices (0-based): after 投手, after 外野手 */
 const AD_AFTER_GROUPS = new Set([0, 3]);
 
 /* Gather results into groups */
-function groupResults(): { label: string; color: string; items: Result[] }[] {
+function groupResults(): { label: string; labelEn: string; items: Result[] }[] {
   const all = Object.values(results);
   return GROUPS.map((g) => ({
     label: g.label,
-    color: g.color,
+    labelEn: g.labelEn,
     items: all.filter((r) => g.positions.includes(r.position)),
   }));
+}
+
+/* ── Card component ── */
+function ResultCard({ r }: { r: Result }) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  return (
+    <Link
+      href={`/result?id=${r.id}`}
+      className="block group"
+    >
+      {/* Image */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-paper-warm">
+        {!imgFailed ? (
+          <Image
+            src={`/images/results/${r.id}.webp`}
+            alt={r.title}
+            fill
+            sizes="(max-width: 640px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-active:scale-[1.02]"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+            <span className="text-2xl font-display font-bold text-navy/20">
+              {r.positionLabel}
+            </span>
+            <span className="text-[10px] text-ink-muted/40">{r.title}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Text below image */}
+      <div className="mt-2 px-0.5">
+        <p className="text-ink font-bold text-[14px] leading-snug truncate">
+          {r.title}
+        </p>
+        <p className="text-ink-muted text-[11px] mt-0.5 truncate">
+          {r.positionLabel}{r.battingOrder ? ` · ${r.battingOrder}番` : ""}
+        </p>
+      </div>
+    </Link>
+  );
 }
 
 export default function ResultsListPage() {
@@ -30,12 +77,15 @@ export default function ResultsListPage() {
   const total = Object.keys(results).length;
 
   return (
-    <main className="min-h-dvh pb-16">
+    <main className="min-h-dvh pb-16 bg-paper">
       {/* Header */}
-      <header className="px-6 pt-14 pb-8">
+      <header className="px-6 pt-14 pb-6">
         <Link href="/" className="text-ink-muted text-[13px] mb-6 inline-block">
           ← トップ
         </Link>
+        <p className="text-gold text-[10px] tracking-[0.2em] uppercase font-bold mb-2">
+          All Reports
+        </p>
         <h1 className="font-display font-extrabold text-[1.6rem] text-ink leading-tight mb-1">
           診断結果一覧
         </h1>
@@ -44,44 +94,27 @@ export default function ResultsListPage() {
         </p>
       </header>
 
-      {/* Groups with interleaved native ads */}
+      {/* Groups */}
       {groups.map((group, groupIdx) => (
         <div key={group.label}>
-          <section className="mb-6">
+          <section className="mb-8">
             {/* Group header */}
-            <div
-              className="px-6 py-2.5 flex items-center justify-between"
-              style={{ backgroundColor: group.color }}
-            >
-              <span className="text-white text-[13px] font-bold tracking-wider">
+            <div className="px-6 mb-4 flex items-baseline gap-2">
+              <span className="text-ink font-display font-bold text-[1.1rem]">
                 {group.label}
               </span>
-              <span className="text-white/50 text-[11px]">
-                {group.items.length}種類
+              <span className="text-ink-muted/40 text-[10px] tracking-wider uppercase">
+                {group.labelEn}
+              </span>
+              <span className="text-ink-muted/30 text-[11px] ml-auto">
+                {group.items.length}種
               </span>
             </div>
 
-            {/* Result rows */}
-            <div>
-              {group.items.map((r, i) => (
-                <Link
-                  key={r.id}
-                  href={`/result?id=${r.id}`}
-                  className="flex items-center gap-3.5 px-6 py-3.5 active:bg-paper-warm transition-colors"
-                  style={i < group.items.length - 1 ? { borderBottom: "1px solid #e8e0d6" } : undefined}
-                >
-                  <span className="text-[11px] font-bold w-8 text-center shrink-0 text-ink-muted">{r.position}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-ink text-[15px] font-medium truncate">{r.title}</span>
-                      {r.battingOrder && (
-                        <span className="text-ink-muted text-[10px] shrink-0">{r.battingOrder}番</span>
-                      )}
-                    </div>
-                    <p className="text-ink-muted text-[12px] truncate">{r.positionLabel} — {r.subtitle}</p>
-                  </div>
-                  <span className="text-ink-muted/30 text-[13px] shrink-0">›</span>
-                </Link>
+            {/* Card grid — 2 columns */}
+            <div className="px-5 grid grid-cols-2 gap-x-3.5 gap-y-6">
+              {group.items.map((r) => (
+                <ResultCard key={r.id} r={r} />
               ))}
             </div>
           </section>
@@ -99,7 +132,7 @@ export default function ResultsListPage() {
       <div className="px-6 mt-4">
         <Link
           href="/quiz"
-          className="flex items-center justify-center w-full bg-vermillion active:bg-vermillion-dark text-white font-bold text-[15px] py-[14px] rounded-md transition-colors"
+          className="flex items-center justify-center w-full bg-navy active:bg-navy-dark text-white font-bold text-[15px] py-[14px] rounded-md transition-colors"
         >
           診断してみる →
         </Link>

@@ -15,37 +15,37 @@ html {
 }
 
 body {
-  background-color: #F5EFE6;
-  color: #1A1714;
+  background-color: #FAF6F0;
+  color: #1B2838;
   font-family: 'Noto Sans JP', sans-serif;
   min-height: 100dvh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Paper texture — subtle grain */
+/* Paper texture — aged parchment grain */
 .bg-paper-texture {
-  background-color: #F5EFE6;
+  background-color: #FAF6F0;
   background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
 }
 
-/* Progress bar */
+/* Progress bar — gold accent */
 .progress-bar {
-  background: #C93A2D;
+  background: #C5973E;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Quiz option */
+/* Quiz option — scout report memo card style */
 .option-card {
   background: #fff;
-  border: 1.5px solid #D1C7B8;
+  border: 1.5px solid #D6CCBC;
   transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
 }
 
 .option-card:hover:not(:disabled) {
-  border-color: #C93A2D;
-  background: #fdf6f5;
+  border-color: #1B3A5C;
+  background: #f5f2ed;
 }
 
 .option-card:active:not(:disabled) {
@@ -58,6 +58,25 @@ body {
 }
 .share-btn:active {
   transform: scale(0.98);
+}
+
+/* Scout report divider — dashed line like handwritten notes */
+.scout-divider {
+  border: none;
+  border-top: 1.5px dashed #D6CCBC;
+}
+
+/* Scout stamp effect for result headers */
+.scout-stamp {
+  border: 2.5px solid #1B3A5C;
+  border-radius: 4px;
+  padding: 2px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  font-size: 11px;
+  transform: rotate(-2deg);
+  display: inline-block;
 }
 
 /* Fade in */
