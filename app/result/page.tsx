@@ -10,7 +10,7 @@ import AdBanner from "@/components/AdBanner";
 const FIELD_KEY: Record<string, string> = {
   SP: "P", RP: "P", CP: "P",
   C: "C", "1B": "1B", "2B": "2B", "3B": "3B",
-  SS: "SS", LF: "LF", CF: "CF", RF: "RF", DH: "DH",
+  SS: "SS", LF: "LF", CF: "CF", RF: "RF", DH: "DH", UTIL: "DH",
 };
 
 /* ── Field position coordinates for diamond SVG ── */
@@ -41,6 +41,7 @@ const THEME: Record<string, { from: string; to: string; accent: string }> = {
   CF:   { from: "#0a2e14", to: "#165a2c", accent: "#48c46a" },
   RF:   { from: "#3d1c0a", to: "#6e3518", accent: "#e09060" },
   DH:   { from: "#2a0a3d", to: "#4e1870", accent: "#a852e0" },
+  UTIL: { from: "#1a1a2e", to: "#2e2e48", accent: "#7a7abe" },
 };
 
 function ResultContent() {
@@ -90,7 +91,9 @@ function ResultContent() {
               onError={() => setImgFailed(true)}
             />
           ) : (
-            <span className="text-8xl drop-shadow-lg">{result.emoji}</span>
+            <span className="text-6xl font-bold drop-shadow-lg" style={{ color: theme.accent }}>
+              {result.positionLabel}
+            </span>
           )}
         </div>
 
@@ -141,14 +144,21 @@ function ResultContent() {
       {/* ━━━ Description section ━━━ */}
       <section className="px-6 py-8">
         <div className="max-w-sm mx-auto">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-[11px] text-ink-muted tracking-[0.12em]">性格・特徴</span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-          <p className="text-ink-soft text-[15px] leading-[1.95]">
-            {result.description}
-          </p>
+          {result.description.split("\n\n").map((section, i) => {
+            const headingMatch = section.match(/^【(.+?)】\n?([\s\S]*)$/);
+            if (!headingMatch) return null;
+            const [, heading, body] = headingMatch;
+            return (
+              <div key={i} className={i > 0 ? "mt-6" : ""}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-[11px] text-ink-muted tracking-[0.12em] shrink-0">{heading}</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+                <p className="text-ink-soft text-[15px] leading-[1.95]">{body}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 

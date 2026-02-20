@@ -9,6 +9,7 @@ const GROUPS: { label: string; positions: string[]; color: string }[] = [
   { label: "内野手", positions: ["1B", "2B", "3B", "SS"], color: "#6e4a14" },
   { label: "外野手", positions: ["LF", "CF", "RF"], color: "#385a16" },
   { label: "指名打者", positions: ["DH"],           color: "#4e1870" },
+  { label: "ユーティリティ", positions: ["UTIL"],   color: "#2e2e48" },
 ];
 
 /** Show native ad after these group indices (0-based): after 投手, after 外野手 */
@@ -69,7 +70,7 @@ export default function ResultsListPage() {
                   className="flex items-center gap-3.5 px-6 py-3.5 active:bg-paper-warm transition-colors"
                   style={i < group.items.length - 1 ? { borderBottom: "1px solid #e8e0d6" } : undefined}
                 >
-                  <span className="text-2xl w-8 text-center shrink-0">{r.emoji}</span>
+                  <span className="text-[11px] font-bold w-8 text-center shrink-0 text-ink-muted">{r.position}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="text-ink text-[15px] font-medium truncate">{r.title}</span>
