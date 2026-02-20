@@ -10,15 +10,26 @@ const config: Config = {
     extend: {
       colors: {
         paper: {
-          DEFAULT: "#F5EFE6",
-          light: "#FAF7F2",
-          warm: "#EDE7DD",
+          DEFAULT: "#FAF6F0",
+          light: "#FDFBF7",
+          warm: "#F3EDE3",
         },
         ink: {
-          DEFAULT: "#1A1714",
-          soft: "#3D3832",
-          muted: "#8C8377",
+          DEFAULT: "#1B2838",
+          soft: "#2E3E50",
+          muted: "#7A8694",
         },
+        navy: {
+          DEFAULT: "#1B3A5C",
+          dark: "#0F2640",
+          light: "#2A5A8C",
+        },
+        gold: {
+          DEFAULT: "#C5973E",
+          dark: "#A67C2E",
+          light: "#DCBA6A",
+        },
+        // Keep vermillion as secondary accent for CTAs
         vermillion: {
           DEFAULT: "#C93A2D",
           dark: "#A82E23",
@@ -26,7 +37,7 @@ const config: Config = {
         },
         field: "#2A5A3B",
         clay: "#B8860B",
-        border: "#D1C7B8",
+        border: "#D6CCBC",
       },
       fontFamily: {
         display: ["'Shippori Mincho B1'", "serif"],

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { questions, ScoreKey } from "@/lib/questions";
-import { computeResultId, Scores } from "@/lib/diagnosis";
+import { questions, LIKERT_OPTIONS } from "@/lib/questions";
+import { computeResultId, type Scores } from "@/lib/diagnosis";
 
 const initialScores: Scores = { p: 0, pw: 0, sp: 0, cl: 0, ld: 0 };
 
@@ -16,17 +16,16 @@ export default function QuizPage() {
   const [direction, setDirection] = useState<"in" | "out">("in");
 
   const question = questions[current];
-  const progress = ((current) / questions.length) * 100;
+  const progress = (current / questions.length) * 100;
 
-  const handleSelect = (optionIndex: number) => {
+  const handleSelect = (likertValue: number, optionIndex: number) => {
     if (selected !== null || animating) return;
     setSelected(optionIndex);
 
-    const option = question.options[optionIndex];
     const newScores = { ...scores };
-    (Object.entries(option.scores) as [ScoreKey, number][]).forEach(([key, val]) => {
-      newScores[key] = (newScores[key] || 0) + val;
-    });
+    for (const loading of question.loadings) {
+      newScores[loading.axis] += likertValue * loading.weight;
+    }
 
     setTimeout(() => {
       setAnimating(true);
@@ -53,7 +52,7 @@ export default function QuizPage() {
       {/* Progress header */}
       <div className="w-full max-w-lg mx-auto mb-8">
         <div className="flex items-baseline justify-between mb-2.5">
-          <span className="font-accent text-xl text-ink">Q.{current + 1}</span>
+          <span className="font-accent text-xl text-navy">Q.{current + 1}</span>
           <span className="text-ink-muted text-[11px]">{current + 1} / {questions.length}</span>
         </div>
         <div className="h-[3px] bg-paper-warm rounded-full overflow-hidden">
@@ -61,7 +60,7 @@ export default function QuizPage() {
         </div>
       </div>
 
-      {/* Question area — grows to fill */}
+      {/* Question area */}
       <div className="flex-1 flex flex-col justify-center w-full max-w-lg mx-auto">
         <div
           className={`transition-all duration-280 ${
@@ -69,26 +68,26 @@ export default function QuizPage() {
           }`}
           style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
         >
-          {/* Question */}
-          <div className="mb-7">
-            <p className="text-ink-muted text-[12px] mb-1.5">
-              {question.sub || "最もあてはまるものを選んでください"}
+          {/* Question statement */}
+          <div className="mb-8">
+            <p className="text-ink-muted text-[11px] mb-2">
+              どのくらい当てはまりますか？
             </p>
-            <h2 className="font-display text-[1.3rem] text-ink leading-snug">
-              {question.text}
+            <h2 className="font-display text-[1.25rem] text-ink leading-relaxed">
+              {question.statement}
             </h2>
           </div>
 
-          {/* Options */}
-          <div className="space-y-2.5">
-            {question.options.map((opt, i) => (
+          {/* Likert scale */}
+          <div className="space-y-3">
+            {LIKERT_OPTIONS.map((opt, i) => (
               <button
-                key={i}
-                onClick={() => handleSelect(i)}
+                key={opt.value}
+                onClick={() => handleSelect(opt.value, i)}
                 disabled={selected !== null}
-                className={`option-card w-full text-left px-4 py-[14px] rounded-md flex items-center gap-3.5
+                className={`option-card w-full text-left px-4 py-[13px] rounded-md flex items-center gap-3.5
                   ${selected === i
-                    ? "!border-vermillion !bg-[#fdf2f1]"
+                    ? "!border-navy !bg-[#f0f3f7]"
                     : selected !== null
                       ? "opacity-30 !cursor-default"
                       : "cursor-pointer"
@@ -96,20 +95,20 @@ export default function QuizPage() {
                 `}
               >
                 <span
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-colors duration-150
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 transition-colors duration-150
                     ${selected === i
-                      ? "bg-vermillion text-white"
+                      ? "bg-navy text-white"
                       : "border-[1.5px] border-border text-ink-muted"
                     }
                   `}
                 >
-                  {String.fromCharCode(65 + i)}
+                  {5 - i}
                 </span>
-                <span className={`text-[15px] leading-snug ${selected === i ? "text-ink font-medium" : "text-ink-soft"}`}>
-                  {opt.text}
+                <span className={`text-[14px] leading-snug ${selected === i ? "text-ink font-medium" : "text-ink-soft"}`}>
+                  {opt.label}
                 </span>
                 {selected === i && (
-                  <svg className="ml-auto shrink-0 text-vermillion" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="ml-auto shrink-0 text-navy" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
@@ -120,15 +119,15 @@ export default function QuizPage() {
       </div>
 
       {/* Dot progress at bottom */}
-      <div className="flex items-center justify-center gap-[6px] pt-6">
+      <div className="flex items-center justify-center gap-[5px] pt-6">
         {questions.map((_, i) => (
           <div
             key={i}
             className={`rounded-full transition-all duration-300 ${
               i < current
-                ? "w-[7px] h-[7px] bg-vermillion"
+                ? "w-[6px] h-[6px] bg-gold"
                 : i === current
-                  ? "w-[9px] h-[9px] bg-vermillion"
+                  ? "w-[8px] h-[8px] bg-navy"
                   : "w-[5px] h-[5px] bg-border"
             }`}
           />
